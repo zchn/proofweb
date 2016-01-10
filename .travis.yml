@@ -1,0 +1,9 @@
+sudo: required
+
+language: ocaml
+
+services:
+  - docker
+
+before_install:
+  - docker build -t zchn/proofweb .

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html><head><title>Proof Assistant web interface prototype</title><meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+  <script type="text/javascript">var prover="__PROVER__"; var user="__USER__"; var design="__DESIGN__"; var session="__SESSION__"; var prefix="__PREFIX__"; var provedit; var mode="__MODE__"; var login="__USER__"; var pass="__PASS__"; var file_name="__FILENAME__"; var trees = 0;</script>
+  <script type="text/javascript" src="__PREFIX__ajax.js"></script>
+  <script type="text/javascript" src="__PREFIX__browser.js"></script>
+  <script type="text/javascript" src="__PREFIX__buffer.js"></script>
+  <script type="text/javascript" src="__PREFIX____PROVER__.js"></script>
+  <script type="text/javascript" src="__PREFIX__prover.js"></script>
+  <script language="javascript" src="__PREFIX__domLib.js"></script>
+  <script language="javascript" src="__PREFIX__domMenu.js"></script>
+  <script language="javascript" src="__PREFIX__domMenu_items.js"></script>
+
+<link rel="stylesheet" href="__PREFIX__webproof.css"></head><body noscroll onunload="unload()">
+<div id="hidetext" style="visibility:hidden; height: 0px; ">__INP__</div>
+
+<table cellpadding=0 cellspacing=0 height="100%" width="100%">
+<tr><td style="padding:0px;">
+  <div class="p" id="domMenu_BJ"></div>
+  <script language="javascript">domMenu_activate('domMenu_BJ');</script>
+</td>
+</tr>
+<tr height="100%"><td height="100%">
+<table cellpadding=0 cellspacing=0 height="100%" width="100%">
+<tr height="100%"><td width="50%" height="100%" width="100%">
+  <iframe id="frame_edit" src="__PREFIX__blank.html" height="100%" width="100%"></iframe>
+</td>
+<textarea tabindex='1' accesskey="," name="wpTextbox1" id="wpTextbox1" style="visibility: hidden; height: 1px; position: absolute; "></textarea>
+<td width="2px"></td>
+<td width="50%">
+  <table cellpadding=0 cellspacing=0 height="100%" width="100%">
+  <tr height="50%" id="state"><td>
+    <iframe id="frame_state" src="__PREFIX__blank.html" height="100%" width="100%"></iframe>
+  </td></tr>
+  <tr height="5%" id="input" style="display: none"><td>
+    <iframe id="frame_input" src="__PREFIX__blank.html" height="100%" width="100%"></iframe>
+  </td></tr>
+  <tr height="5%" id="output" style="display: none"><td>
+    <iframe id="frame_output" src="__PREFIX__blank.html" height="100%" width="100%"></iframe>
+  </td></tr>
+  <tr height="50%" id="error"><td>
+    <iframe id="frame_error" src="__PREFIX__blank.html" height="100%" width="100%"></iframe>
+  </td></tr>
+  </table>
+</td>
+</tr></table>
+</td></tr></table>
+<form name="gateway" action="logged.html" method="post" style="display:none;"><input type="hidden" name="login" value="__USER__"><input type="hidden" name="pass" value="__PASS__"></form>
+<script language="javascript">
+    function toggle_debug () {
+        var id = document.getElementById("input");
+        var od = document.getElementById("output");
+        if (id.style.display=="none") {
+            id.style.display = "";
+            od.style.display = "";
+        } else {
+            id.style.display = "none";
+            od.style.display = "none";
+        }
+    }
+</script>
+<script type="text/javascript">
+  function post_load () {
+    provedit = document.getElementById("hidetext").innerHTML;
+    document.getElementById("hidetext").innerHTML = "";
+    doc_coq = get_frame ("frame_edit");
+    doc_error.body.innerHTML = "<pre>__ERR__</pre>";
+    doc_state.body.innerHTML = "<pre>__OUT__</pre>";
+    setTimeout ('time_tider (); set_cursor();', 500);
+    need_getedit = true; set_all(provedit);
+    document.title = file_name + " - ProofWeb";
+    if (file_name == '') document.title = "Unnamed - ProofWeb";
+  }
+  all_load ();
+</script></body></html>

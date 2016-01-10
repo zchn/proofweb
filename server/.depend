@@ -1,0 +1,14 @@
+coq.cmo: utils.cmo prover.cmo options.cmo 
+coq.cmx: utils.cmx prover.cmx options.cmx 
+file_mt_reactor.cmo: service.cmo options.cmo 
+file_mt_reactor.cmx: service.cmx options.cmx 
+isa.cmo: utils.cmo prover.cmo 
+isa.cmx: utils.cmx prover.cmx 
+prover.cmo: utils.cmo options.cmo 
+prover.cmx: utils.cmx options.cmx 
+service.cmo: utils.cmo session.cmo prover.cmo options.cmo 
+service.cmx: utils.cmx session.cmx prover.cmx options.cmx 
+session.cmo: prover.cmo options.cmo isa.cmo coq.cmo 
+session.cmx: prover.cmx options.cmx isa.cmx coq.cmx 
+utils.cmo: options.cmo 
+utils.cmx: options.cmx 

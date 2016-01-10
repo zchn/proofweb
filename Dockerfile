@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     make \
     gcc \
     wget
+RUN opam install ocamlnet
 RUN wget https://github.com/zchn/proofweb/archive/master.zip
 RUN unzip master.zip
 ENV CHROOT /

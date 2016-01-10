@@ -44,7 +44,7 @@ $(CHROOT)/coq/bin/coqtop.opt:
 
 $(CHROOT)/bin/sh: $(CHROOT)/coq/bin/coqtop.opt
 	mkdir -p $(CHROOT)/bin
-	cp /bin/sh /usr/bin/nice /bin/rm /usr/bin/touch $(CHROOT)/bin
+	cp -u /bin/sh /usr/bin/nice /bin/rm /usr/bin/touch $(CHROOT)/bin
 
 $(CHROOT)/index.html:
 	wget http://prover.cs.ru.nl/inst/static.tar.gz
@@ -54,7 +54,7 @@ $(CHROOT)/index.html:
 $(CHROOT)/lib/ld-linux.so.2: $(CHROOT)/bin/sh $(CHROOT)/bin/sh $(CHROOT)/index.html $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/bin/verify $(CHROOT)/webserve
 	for j in $(CHROOT)/bin/* $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/webserve; do \
 	  for i in `ldd $$j | cut -d "(" -f 1 | cut -d ">" -f 2`; do \
-	    mkdir -p $(CHROOT)`dirname $$i`; cp $$i $(CHROOT)`dirname $$i`; done; done
+	    mkdir -p $(CHROOT)`dirname $$i`; cp -u $$i $(CHROOT)`dirname $$i`; done; done
 
 # Newer versions of the pthreads library (e.g. version 2.11.2 in Debian Squeeze)
 # require the library below in the CHROOT, to prevent webserve crashing with:
@@ -62,7 +62,7 @@ $(CHROOT)/lib/ld-linux.so.2: $(CHROOT)/bin/sh $(CHROOT)/bin/sh $(CHROOT)/index.h
 
 # $(CHROOT)/lib/libgcc_s.so.1: /lib/libgcc_s.so.1
 $(CHROOT)/lib/libgcc_s.so.1: /lib/x86_64-linux-gnu/libgcc_s.so.1
-	cp $< $@
+	cp -u $< $@
 
 clean:
 	rm *.tar.gz

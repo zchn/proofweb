@@ -17,25 +17,30 @@ endif
 
 
 $(CHROOT)/webserve:
-	wget prover.cs.ru.nl/inst/server.tar.gz
-	tar xzpf server.tar.gz
+	# wget prover.cs.ru.nl/inst/server.tar.gz
+	# tar xzpf server.tar.gz
 	make -C server
 	mkdir -p $(CHROOT)
 	cp server/webserve $(CHROOT)
 
 $(CHROOT)/bin/verify:
-	wget prover.cs.ru.nl/inst/verifier.tar.gz
-	tar xzpf verifier.tar.gz
+	# wget prover.cs.ru.nl/inst/verifier.tar.gz
+	# tar xzpf verifier.tar.gz
 	make -C verifier
 	mkdir -p $(CHROOT)/bin
 	cp verifier/verify $(CHROOT)/bin/
 
 $(CHROOT)/coq/bin/coqtop.opt:
-	wget http://coq.inria.fr/distrib/v8.2/files/coq-8.2.tar.gz
-	tar xzf coq-8.2.tar.gz
-	cd coq-8.2; ./configure -prefix /coq -fsets all -reals all -coqide no -with-doc no
-	make -C coq-8.2 world
-	COQINSTALLPREFIX=$(CHROOT) make -C coq-8.2 install
+	wget https://coq.inria.fr/distrib/V8.4pl6/files/coq-8.4pl6.tar.gz
+	tar xzg coq-8.4pl6.tar.gz
+	cd coq-8.4pl6; ./configure -prefix /coq -coqide no -with-doc no
+	make -C coq-8.4pl6 world
+	COQINSTALLPREFIX=$(CHROOT) make -C coq-8.4pl6 install
+	# wget http://coq.inria.fr/distrib/8.2/files/coq-8.2.tar.gz
+	# tar xzf coq-8.2.tar.gz
+	# cd coq-8.2; ./configure -prefix /coq -fsets all -reals all -coqide no -with-doc no
+	# make -C coq-8.2 world
+# COQINSTALLPREFIX=$(CHROOT) make -C coq-8.2 install
 
 $(CHROOT)/bin/sh: $(CHROOT)/coq/bin/coqtop.opt
 	mkdir -p $(CHROOT)/bin

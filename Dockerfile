@@ -1,6 +1,7 @@
 FROM ocaml/opam:ubuntu
 MAINTAINER zchn
 
+USER root
 RUN apt-get update && apt-get install -y \
     build-essential \
     make \

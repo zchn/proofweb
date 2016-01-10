@@ -1,4 +1,4 @@
-FROM avsm/docker-opam-build:ubuntu-14.04-ocaml-4.02.1
+FROM ocaml/opam:ubuntu
 MAINTAINER zchn
 
 RUN apt-get update && apt-get install -y \

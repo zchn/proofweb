@@ -1,1 +1,0 @@
-<?php header("Location: /" . $_GET["course"], true, 301);?>

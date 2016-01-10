@@ -32,7 +32,7 @@ $(CHROOT)/bin/verify:
 
 $(CHROOT)/coq/bin/coqtop.opt:
 	wget https://coq.inria.fr/distrib/V8.4pl6/files/coq-8.4pl6.tar.gz
-	tar xzg coq-8.4pl6.tar.gz
+	tar xzf coq-8.4pl6.tar.gz
 	cd coq-8.4pl6; ./configure -prefix /coq -coqide no -with-doc no
 	make -C coq-8.4pl6 world
 	COQINSTALLPREFIX=$(CHROOT) make -C coq-8.4pl6 install

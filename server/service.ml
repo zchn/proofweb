@@ -2,17 +2,17 @@ open Utils;;
 open Session;;
 open Format;;
 
-let serve_listen (cgi:Netcgi_types.cgi_activation) session =
+let serve_listen (cgi:Netcgi.cgi_activation) session =
   cgi # set_header ~content_type:"text/html" ~cache:`No_cache ();
   cgi # output # output_string (session_listen session)
 ;;
 
-let serve_say (cgi:Netcgi_types.cgi_activation) session argument =
+let serve_say (cgi:Netcgi.cgi_activation) session argument =
   session_queue session argument;
   serve_listen cgi session
 ;;
 
-let serve_undo (cgi:Netcgi_types.cgi_activation) session argument =
+let serve_undo (cgi:Netcgi.cgi_activation) session argument =
   begin try session_undo session (int_of_string argument);
   with Failure s ->
     cgi # set_header ~content_type:"text/html" ~cache:`No_cache ();
@@ -45,9 +45,9 @@ let tohtmlmini s = replace_list s [("\n", "<br>"); ("\\", "\\\\")];;
 
 let escape s = replace "'" "\\'" (replace "\"" "\\\"" s);;
 
-let serve_save (cgi:Netcgi_types.cgi_activation) session name content =
+let serve_save (cgi:Netcgi.cgi_activation) session name content =
   cgi # set_header ~content_type:"text/html" ();
-  try 
+  try
     let fname = "files/" ^ session.user ^ "/" ^ name in
     let outc = open_out fname in
     output_string outc (unhtml content);
@@ -67,12 +67,12 @@ let serve_save (cgi:Netcgi_types.cgi_activation) session name content =
       end
     end else ();
     cgi # output # output_string "++"
-  with _ -> 
+  with _ ->
     Utils.time_log "Save Failed@.";
     cgi # output # output_string "+-"
 ;;
 
-let serve_restart (cgi:Netcgi_types.cgi_activation) session =
+let serve_restart (cgi:Netcgi.cgi_activation) session =
   session_restart session;
   cgi # set_header ~content_type:"text/html" ();
   cgi # output # output_string "++"
@@ -98,7 +98,7 @@ let getfile name user prover olderr =
     with _ -> "", ("Tried to load a nonexisting file: " ^ name)
 ;;
 
-let serve_auth (cgi:Netcgi_types.cgi_activation) session =
+let serve_auth (cgi:Netcgi.cgi_activation) session =
   (*Utils.time_log "In auth@.";*)
   let packet = try int_of_string (cgi # argument_value "callnr") with _ -> 0 in
   let command = cgi # argument_value "command" in
@@ -213,7 +213,7 @@ let getcalcsession () =
   | None -> Mutex.unlock mutex; newcalcsession ()
 ;;
 
-let authenticate (cgi:Netcgi_types.cgi_activation) =
+let authenticate (cgi:Netcgi.cgi_activation) =
   (*if (try cgi # argument_value "prover" with _ -> "") = "calc" then begin
     Utils.time_log "Try open calc session.@.";
     Some (session_get (getcalcsession ()));
@@ -227,8 +227,8 @@ let authenticate (cgi:Netcgi_types.cgi_activation) =
   end else begin
     let sess = try int_of_string (cgi # argument_value "s") with _ -> 0 in
     let sess = if sess <> 0 then try Some (session_get sess) with _ -> None else None in
-    match sess with 
-    | Some _ -> sess 
+    match sess with
+    | Some _ -> sess
     | None ->
         let login = cgi # argument_value "login" in
         let login = (cgi # argument_value ~default:"" "logingrp") ^ login in
@@ -248,7 +248,7 @@ let authenticate (cgi:Netcgi_types.cgi_activation) =
   end
 ;;
 
-let calc _ (cgi:Netcgi_types.cgi_activation) =
+let calc _ (cgi:Netcgi.cgi_activation) =
   (try Unix.setuid !Options.uid with _ -> ());
   let sess = getcalcsession () in
   let content = replace "__SESSION__" (string_of_int sess) (read_file "calc.html") in
@@ -256,7 +256,7 @@ let calc _ (cgi:Netcgi_types.cgi_activation) =
   cgi # output # commit_work ()
 ;;
 
-let serve _ (cgi:Netcgi_types.cgi_activation) =
+let serve _ (cgi:Netcgi.cgi_activation) =
   (try Unix.setuid !Options.uid with _ -> ());
   try
     begin match authenticate cgi with

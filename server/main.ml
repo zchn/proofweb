@@ -6,7 +6,7 @@ open Format;;
 let fs_spec =
   { file_docroot = "./pub/";
     file_uri = "/";
-    file_suffix_types = [ 
+    file_suffix_types = [
         "js",   "text/javascript";
         "css",  "text/css";
         "xml",  "text/xml";
@@ -21,31 +21,31 @@ let fs_spec =
   }
 ;;
 
-let options = 
-  ["-coqtop", 
+let options =
+  ["-coqtop",
    Arg.String (fun x -> ()), (* TODO *)
    "Specify which coqtop to run";
-   
+
    "-lego",
    Arg.String (fun x -> Options.lego := x),
    "Specify which lego to run";
-   
+
    "-port"    ,
    Arg.Set_int Options.port_no,
    "Specify port number";
-   
+
    "-files"   ,
    Arg.String (fun x -> Options.files := x),
    "Specify directory where to read/store files";
-   
+
    "-localhost" ,
    Arg.String (fun x -> Options.localhost := x),
    "Specify name of local host";
-   
+
    "-address" ,
    Arg.String (fun x -> Options.address := x),
    "Specify ip of local host";
-   
+
    "-wiki",
    Arg.Set Options.wiki,
    "Set wiki mode";
@@ -63,7 +63,7 @@ let options =
    "Change the log file name (log)"
 ];;
 
-let anon_fun s = 
+let anon_fun s =
   failwith (sprintf "No such option : %S " s);;
 
 let description = "The prover-web prototype";;
@@ -107,25 +107,25 @@ let srv =
 ;;
 
 let start () =
-  let config : http_reactor_config =
-    object
-      method config_timeout_next_request = 15.0
-      method config_timeout = 300.0
-      method config_reactor_synch = `Write
-      method config_cgi = Netcgi_env.default_config
-      method config_error_response n = 
-	"<html>Error " ^ string_of_int n ^ "</html>"
-      method config_log_error _ sock meth header msg =
-        let ip = match sock with Some (Unix.ADDR_INET (addr, _)) -> Unix.string_of_inet_addr addr | _ -> "" in
-        let meth, uri = match meth with Some (a, b) -> a, b | _ -> "", "" in
-	Utils.time_log "%15s %s %s %s \n%!" ip meth uri msg 
-      method config_max_reqline_length = 256
-      method config_max_header_length = 32768
-      method config_max_trailer_length = 32768
-      method config_limit_pipeline_length = 0
-      method config_limit_pipeline_size = 250000
-      method config_announce_server = `Ignore
-    end in
+  let config : http_reactor_config = Nethttpd_reactor.default_http_reactor_config in
+    (* object *)
+    (*   method config_timeout_next_request = 15.0 *)
+    (*   method config_timeout = 300.0 *)
+    (*   method config_reactor_synch = `Write *)
+    (*   method config_cgi = Netcgi.default_config *)
+    (*   method config_error_response n = *)
+    (*     "<html>Error " ^ string_of_int n ^ "</html>" *)
+    (*   method config_log_error _ sock meth header msg = *)
+    (*     let ip = match sock with Some (Unix.ADDR_INET (addr, _)) -> Unix.string_of_inet_addr addr | _ -> "" in *)
+    (*     let meth, uri = match meth with Some (a, b) -> a, b | _ -> "", "" in *)
+    (*     Utils.time_log "%15s %s %s %s \n%!" ip meth uri msg *)
+    (*   method config_max_reqline_length = 256 *)
+    (*   method config_max_header_length = 32768 *)
+    (*   method config_max_trailer_length = 32768 *)
+    (*   method config_limit_pipeline_length = 0 *)
+    (*   method config_limit_pipeline_size = 250000 *)
+    (*   method config_announce_server = `Ignore *)
+    (* end in *)
 
   let master_sock = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
   Unix.setsockopt master_sock Unix.SO_REUSEADDR true;
@@ -151,13 +151,13 @@ let start () =
 ;;
 
 let create_pid_file () =
-  let outc = 
+  let outc =
     open_out_gen [Open_creat;Open_excl;Open_wronly] 0o644 !Options.pid_file in
       output_string outc (string_of_int (Unix.getpid ()));
     close_out outc
 ;;
 
-let sigterm_handler log_chan signum = 
+let sigterm_handler log_chan signum =
   Utils.time_log "SIGTERM: Exiting.@.";
   close_out log_chan;
   exit 0
@@ -172,13 +172,13 @@ let main =
   Unix.close Unix.stdin;
   Unix.close Unix.stdout;
   Unix.close Unix.stderr;
-  if !Options.daemon && Unix.fork () > 0 then begin 
+  if !Options.daemon && Unix.fork () > 0 then begin
     close_out log_chan;
     exit 0
   end;
   Sys.set_signal Sys.sigpipe Sys.Signal_ignore;
-  Sys.set_signal Sys.sighup Sys.Signal_ignore;  
-  Sys.set_signal Sys.sigterm 
+  Sys.set_signal Sys.sighup Sys.Signal_ignore;
+  Sys.set_signal Sys.sigterm
     (Sys.Signal_handle (sigterm_handler log_chan));
   if !Options.daemon then create_pid_file ();
   start ()

@@ -1,4 +1,3 @@
-
 MAIN = webserve
 
 SOURCES = options.ml utils.ml prover.ml isa.ml coqtree.ml coq.ml matita.ml holl.ml session.ml \
@@ -6,7 +5,7 @@ SOURCES = options.ml utils.ml prover.ml isa.ml coqtree.ml coq.ml matita.ml holl.
 
 ALLSOURCES = $(SOURCES)
 
-GENFILES = 
+GENFILES =
 
 COPT = -thread
 
@@ -16,10 +15,10 @@ NATIVEOBJ = $(ALLSOURCES:.ml=.cmx)
 
 BINARIES = $(MAIN) $(MAIN).byte $(MAIN).top
 
-INCLUDES = -I +pcre -I +cgi -I +nethttpd -I +netstring -I +threads -I +xstr  -I +xml-light -dtypes -I +netcgi1 -I +nethttpd-for-netcgi1 -I +netsys
- 
-BYTECODELIBS = unix.cma pcre.cma netsys.cma netstring.cma cgi.cma nethttpd-for-netcgi1.cma \
- threads.cma xstr.cma xml-light.cma
+INCLUDES = -I +pcre -I +cgi -I +nethttpd -I +netstring -I +threads -I +xstr  -I +xml-light -dtypes -I +netcgi2 -I +nethttpd-for-netcgi2 -I +netsys -I +equeue
+
+BYTECODELIBS = unix.cma pcre.cma bigarray.cma netsys_oothr.cma netsys.cma str.cma netstring.cma netcgi.cma equeue.cma nethttpd.cma \
+threads.cma xstr.cma xml-light.cma
 
 NATIVELIBS = $(BYTECODELIBS:.cma=.cmxa)
 
@@ -41,10 +40,10 @@ gen: $(GENFILES)
 	ocamlc -c $(COPT) $(INCLUDES) $<
 
 %.cmo: %.ml
-	ocamlc -c $(COPT) $(INCLUDES) $<                
+	ocamlc -c $(COPT) $(INCLUDES) $<
 
 %.cmx: %.ml
-	ocamlopt -c $(COPT) $(INCLUDES) $<                
+	ocamlopt -c $(COPT) $(INCLUDES) $<
 
 $(MAIN).byte: $(BYTECODEOBJ)
 	ocamlc $(COPT) $(INCLUDES) $(BYTECODELIBS) $(BYTECODEOBJ) -o $(MAIN).byte

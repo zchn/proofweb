@@ -60,5 +60,13 @@ $(CHROOT)/lib/ld-linux.so.2: $(CHROOT)/bin/sh $(CHROOT)/bin/sh $(CHROOT)/index.h
 # require the library below in the CHROOT, to prevent webserve crashing with:
 # "libgcc_s.so.1 must be installed for pthread_cancel to work"
 
-$(CHROOT)/lib/libgcc_s.so.1: /lib/libgcc_s.so.1
+# $(CHROOT)/lib/libgcc_s.so.1: /lib/libgcc_s.so.1
+$(CHROOT)/lib/libgcc_s.so.1: /lib/x86_64-linux-gnu/libgcc_s.so.1
 	cp $< $@
+
+clean:
+	rm *.tar.gz
+	rm -fr scripts
+	rm -fr static
+	make -C server clean
+	make -C verifier clean

@@ -2,7 +2,7 @@ open Utils;;
 open Session;;
 open Format;;
 
-let output_provers (cgi:Netcgi_types.cgi_activation) =
+let output_provers (cgi:Netcgi.cgi_activation) =
   cgi # output # output_string "<select name=\"prover\">";
   cgi # output # output_string "<option value=\"coq\">Coq</option>";
   cgi # output # output_string "<option value=\"coqtrunk\">Coq/Trunk</option>";
@@ -14,7 +14,7 @@ let output_provers (cgi:Netcgi_types.cgi_activation) =
   cgi # output # output_string "<option value=\"holl\">HOL Light (incomplete)</option></select><br/>";
 ;;
 
-let auth (cgi:Netcgi_types.cgi_activation) =
+let auth (cgi:Netcgi.cgi_activation) =
   let login = cgi # argument_value "login" in
   let login = (cgi # argument_value ~default:"" "logingrp") ^ login in
   let adminlogin = cgi # argument_value ~default:"" "adminlogin" in
@@ -23,7 +23,7 @@ let auth (cgi:Netcgi_types.cgi_activation) =
   let admin_logins = read_comma_separated "/admin_logins" in
   let admin_logins = List.map (fun x -> (List.hd x, (List.hd (List.tl x)))) admin_logins in
   Utils.time_log "Try login2: %s@." login;
-  let goodpass = try List.assoc adminlogin admin_logins with _ -> "" in 
+  let goodpass = try List.assoc adminlogin admin_logins with _ -> "" in
   let pass = cgi # argument_value ~default:"" "pass" in
   Utils.time_log "Try login3: %s@." login;
   let l = read_comma_separated "/logins" in
@@ -32,7 +32,7 @@ let auth (cgi:Netcgi_types.cgi_activation) =
   if (goodpass = Digest.to_hex (Digest.string adminpass)) || (Digest.to_hex (Digest.string pass) = List.hd (List.tl t)) then login,pass,adminlogin,adminpass else raise Exit
 ;;
 
-let logged _ (cgi:Netcgi_types.cgi_activation) =
+let logged _ (cgi:Netcgi.cgi_activation) =
   (try let login,pass,adminlogin,adminpass = auth cgi in
   cgi # set_header ~content_type:"text/html" ~cache:`No_cache ();
   cgi # output # output_string "<html><head><link rel=\"stylesheet\" href=\"pub/control.css\"></head><body>\n";
@@ -69,16 +69,16 @@ let logged _ (cgi:Netcgi_types.cgi_activation) =
       let comment = try List.assoc name comments with _ -> "" in
       (*let dot = String.rindex name '.' in*)
       (*let sname = String.sub name 0 dot in*)
-      let status = 
+      let status =
         if slogin = "nobody" then "<font color=\"grey\">Cannot save as nobody</font>" else
         if not (List.mem name files) then "<font color=\"grey\">Not touched</font>" else
-        if not (List.mem (name ^ "o") files) then 
+        if not (List.mem (name ^ "o") files) then
           let hint = replace "\n" "\\n" (replace "'" "&quot;" (replace "\"" "&quot;" (try read_file ("files/" ^ login ^ "/" ^ name ^ "nok") with _ -> ""))) in
-          (*"<a class=\"nocompile\" href=\"#\" title=\"" ^ hint ^ "\">Incomplete</a>"*) 
+          (*"<a class=\"nocompile\" href=\"#\" title=\"" ^ hint ^ "\">Incomplete</a>"*)
           let nw = "var okno = window.open('about:blank', 'why'); okno.window.document.open(); okno.window.document.write('<html><body><pre>" ^ hint ^ "</html>'); okno.window.document.close();" in
           "<font color=\"red\">Incomplete</font> (<a href=\"#\" onclick=\"" ^ nw ^ "\">why?</a>)"
         else
-          if not (List.mem (name ^ "ok") files) then 
+          if not (List.mem (name ^ "ok") files) then
             let hint = replace "\n" "\\n" (replace "'" "&quot;" (replace "\"" "&quot;" (try read_file ("files/" ^ login ^ "/" ^ name ^ "nok") with _ -> ""))) in
             let nw = "var okno = window.open('about:blank', 'why'); okno.window.document.open(); okno.window.document.write('<html><body><pre>" ^ hint ^ "</html>'); okno.window.document.close();" in
             "<font color=\"orange\">Correct</font> (<a href=\"#\" onclick=\"" ^ nw ^ "\">why?</a>)"
@@ -116,6 +116,6 @@ let logged _ (cgi:Netcgi_types.cgi_activation) =
   cgi # output # output_string "<input type=\"submit\" value=\"Load\"></form></li>";
   cgi # output # output_string "</li></ul>";
   cgi # output # output_string "</body></html>"
-  with _ -> login_page cgi);  
+  with _ -> login_page cgi);
   cgi # output # commit_work ();
 ;;

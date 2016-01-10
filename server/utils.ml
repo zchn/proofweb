@@ -40,7 +40,7 @@ let string_list_of_string str sep =
   in slos_aux str []
 ;;
 
-let int_of_string_space str = 
+let int_of_string_space str =
   let lst = string_list_of_string str ' ' in
   int_of_string (List.hd lst)
 ;;
@@ -56,7 +56,7 @@ let rec removelist n = function
 ;;
 
 let containslist l1 l2 =
-  List.fold_left (fun ok e -> ok && List.mem e l1) true l2 
+  List.fold_left (fun ok e -> ok && List.mem e l1) true l2
 ;;
 
 (*
@@ -84,11 +84,11 @@ let save_log_chan = open_out_gen [Open_append;Open_wronly;Open_creat] 0o644 "/sa
 let save_log_f = Format.formatter_of_out_channel save_log_chan;;
 
 let save_log frmt = Format.fprintf save_log_f frmt;;
-  
+
 let time_log frmt =
   let tim = Unix.localtime (Unix.time ()) in
   log "[%02i/%02i/%02i %02i:%02i:%02i] "
-    (tim.Unix.tm_year - 100) (tim.Unix.tm_mon + 1) tim.Unix.tm_mday 
+    (tim.Unix.tm_year - 100) (tim.Unix.tm_mon + 1) tim.Unix.tm_mday
     tim.Unix.tm_hour tim.Unix.tm_min tim.Unix.tm_sec;
   log frmt
 ;;
@@ -120,22 +120,22 @@ let read_comma_pairs name =
   List.map (fun s -> ((List.hd s), List.hd (List.tl s))) l
 ;;
 
-let login_page (cgi:Netcgi_types.cgi_activation) =
+let login_page (cgi:Netcgi.cgi_activation) =
   let ip = cgi#environment#cgi_remote_addr in
   let user = cgi#environment#input_header_field ~default:"" "user-agent" in
   time_log "%15s V %s@." ip user;
   cgi#set_redirection_header "login.php";
-  cgi # output # commit_work () 
+  cgi # output # commit_work ()
 ;;
 
-(*let login_page (cgi:Netcgi_types.cgi_activation) =
+(*let login_page (cgi:Netcgi.cgi_activation) =
   let login_page = read_file "/pub/login.html" in
   let ip = cgi#environment#cgi_remote_addr in
   let user = cgi#environment#input_header_field ~default:"" "user-agent" in
   time_log "%15s V %s@." ip user;
   cgi # set_header ~content_type:"text/html" ();
-  cgi # output # output_string login_page;                                                        
-  cgi # output # commit_work () 
+  cgi # output # output_string login_page;
+  cgi # output # commit_work ()
 ;;*)
 
 external set_close_on_exec : Unix.file_descr -> unit = "unix_set_close_on_exec";;
@@ -170,4 +170,3 @@ let open_process_full cmd env =
   Unix.close err_write;
   (inchan, outchan, errchan, id)
 ;;
-

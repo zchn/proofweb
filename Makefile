@@ -43,7 +43,7 @@ $(CHROOT)/coq/bin/coqtop.opt:
 # COQINSTALLPREFIX=$(CHROOT) make -C coq-8.2 install
 
 $(CHROOT)/bin/sh: $(CHROOT)/coq/bin/coqtop.opt
-	if [ $(CHROOT) != "/" ] then
+	if [ $(CHROOT) != "/" ]; then
 		mkdir -p $(CHROOT)/bin
 		cp /bin/sh /usr/bin/nice /bin/rm /usr/bin/touch $(CHROOT)/bin
 	fi

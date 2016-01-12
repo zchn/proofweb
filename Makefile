@@ -51,7 +51,11 @@ $(CHROOT)/bin/sh: $(CHROOT)/coq/bin/coqtop.opt
 $(CHROOT)/index.html:
 	wget http://prover.cs.ru.nl/inst/static.tar.gz
 	sudo tar xzpf static.tar.gz
-	sudo cp -r -f static/* $(CHROOT)
+	if [ $(CHROOT) = "/" ]; then\
+		sudo touch /usr
+	fi
+	sudo cp -u -r -f static/* $(CHROOT);\
+	
 
 $(CHROOT)/lib/ld-linux.so.2: $(CHROOT)/bin/sh $(CHROOT)/bin/sh $(CHROOT)/index.html $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/bin/verify $(CHROOT)/webserve
 	for j in $(CHROOT)/bin/* $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/webserve; do \

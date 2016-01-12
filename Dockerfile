@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     gcc \
     wget \
     camlp4-extra \
-    m4
+    m4 libxstr-ocaml-dev libpcre-ocaml-dev libocamlnet-ocaml-dev \
+    libxml-light-ocaml-dev camlp4-extra camlp5 make libapache2-mod-php5
 RUN opam install ocamlnet ocamlscript xstr
 RUN wget https://github.com/zchn/proofweb/archive/master.zip
 RUN unzip master.zip

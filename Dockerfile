@@ -6,7 +6,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     make \
     gcc \
-    wget
+    wget \
+    camlp4-extra \
+    m4
 RUN opam install ocamlnet ocamlscript
 RUN wget https://github.com/zchn/proofweb/archive/master.zip
 RUN unzip master.zip

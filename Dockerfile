@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     camlp4-extra \
     m4
-RUN opam install ocamlnet ocamlscript
+RUN opam install ocamlnet ocamlscript xstr
 RUN wget https://github.com/zchn/proofweb/archive/master.zip
 RUN unzip master.zip
 ENV CHROOT /

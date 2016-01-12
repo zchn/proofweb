@@ -58,9 +58,10 @@ $(CHROOT)/index.html:
 	
 
 $(CHROOT)/lib/ld-linux.so.2: $(CHROOT)/bin/sh $(CHROOT)/bin/sh $(CHROOT)/index.html $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/bin/verify $(CHROOT)/webserve
-	for j in $(CHROOT)/bin/* $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/webserve; do \
-	  for i in `ldd $$j | cut -d "(" -f 1 | cut -d ">" -f 2`; do \
-	    mkdir -p $(CHROOT)`dirname $$i`; cp $$i $(CHROOT)`dirname $$i`; done; done
+	if [ $(CHROOT) != "/" ]; then\
+		for j in $(CHROOT)/bin/* $(CHROOT)/coq/bin/coqtop.opt $(CHROOT)/webserve; do \
+	  	for i in `ldd $$j | cut -d "(" -f 1 | cut -d ">" -f 2`; do \
+	    	mkdir -p $(CHROOT)`dirname $$i`; cp $$i $(CHROOT)`dirname $$i`; done; done; fi
 
 # Newer versions of the pthreads library (e.g. version 2.11.2 in Debian Squeeze)
 # require the library below in the CHROOT, to prevent webserve crashing with:

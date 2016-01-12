@@ -52,7 +52,7 @@ $(CHROOT)/index.html:
 	wget http://prover.cs.ru.nl/inst/static.tar.gz
 	sudo tar xzpf static.tar.gz
 	if [ $(CHROOT) = "/" ]; then\
-		sudo touch /usr
+		sudo touch /usr;\
 	fi
 	sudo cp -u -r -f static/* $(CHROOT);\
 	

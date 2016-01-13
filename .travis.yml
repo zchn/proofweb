@@ -5,5 +5,7 @@ language: C
 services:
   - docker
 
+install: true
+
 script:
   - docker build -t zchn/proofweb .

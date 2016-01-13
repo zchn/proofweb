@@ -1,9 +1,9 @@
 sudo: required
 
-language: ocaml
+language: C
 
 services:
   - docker
 
-before_install:
+script:
   - docker build -t zchn/proofweb .
